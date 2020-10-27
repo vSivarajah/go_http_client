@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	"github.com/vsivarajah/go_http_client/gohttp"
 )
@@ -12,14 +11,13 @@ var (
 	httpClient = getGithubClient()
 )
 
-func getGithubClient() gohttp.HttpClient {
-	client := gohttp.New()
+func getGithubClient() gohttp.Client {
+	client := gohttp.NewBuilder().
+		SetMaxIdleConnections(5).
+		DisableTimeouts(true).
+		SetHeaders(nil).
+		Build()
 
-	client.DisableTimeouts(true)
-
-	commonHeaders := make(http.Header)
-	commonHeaders.Set("Authorization", "Bearer ABC-123")
-	client.SetHeaders(commonHeaders)
 	return client
 }
 
